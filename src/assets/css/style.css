@@ -1,0 +1,41 @@
+@font-face {
+  font-family: stolzl_medium;
+  src: url('../fonts/stolzl_medium.otf');
+}
+@font-face {
+  font-family: stolzl_light;
+  src: url('../fonts/stolzl_light.otf');
+}
+* {
+  font-family: Bip;
+  margin: 0;
+  padding: 0;
+}
+div, p, span, h1, h2, h3, h4, img {
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  outline: none;
+}
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background: #1E0941;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  cursor: pointer;
+}
+#root {
+  position: fixed;
+}
