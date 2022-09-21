@@ -41,7 +41,7 @@ export default class Game extends Phaser.Scene {
     this.onOutOfBounds();
     let velocity = this.minVelocity;
     this.currentVelocity = Math.min(velocity, this.maxVelocity);
-    this.bg.tilePositionX += (this.currentVelocity / this.minVelocity) * 2.2;
+    this.bg.tilePositionX += (this.currentVelocity / this.minVelocity) * 4.2;
   }
 
   private tapOnTheScreen(): void {
@@ -146,8 +146,8 @@ export default class Game extends Phaser.Scene {
         ? Phaser.Math.Between(1, 4)
         : Phaser.Math.Between(1, 5);
     const x = Phaser.Math.Between(
-      platform.x - platform.size / 2 + 15,
-      platform.x + platform.size / 2 - 15
+      platform.x - platform.size / 2 + 25,
+      platform.x + platform.size / 2 - 25
     );
     const icon = new Coin(this, x, platform.y - 80, texture + num, type);
     this.coins.add(icon);
