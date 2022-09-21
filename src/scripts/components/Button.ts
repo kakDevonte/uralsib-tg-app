@@ -4,7 +4,7 @@ class Button extends Phaser.GameObjects.Sprite {
     x: number,
     y: number,
     texture: string,
-    callback: Function = (): void => {}
+    callback: () => void
   ) {
     super(scene, x, y, texture);
     this.scene = scene;
@@ -17,7 +17,7 @@ class Button extends Phaser.GameObjects.Sprite {
   public x: number;
   public y: number;
   public press: boolean;
-  public callback: Function = (): void => {};
+  public callback: () => void;
   private simple: boolean = false;
 
   private init(): void {
