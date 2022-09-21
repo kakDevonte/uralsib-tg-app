@@ -17,6 +17,17 @@ import red5 from '../../assets/images/red-5.png';
 import ice from '../../assets/images/ice.png';
 import flame from '../../assets/images/flame.png';
 import startBtn from '../../assets/images/start-btn.png';
+import progressBg from '../../assets/images/progress-bg.png';
+import pause from '../../assets/images/pause.png';
+import progress from '../../assets/images/progress.png';
+import point from '../../assets/images/point.png';
+import close from '../../assets/images/close.png';
+import rulesBtn from '../../assets/images/rules-btn.png';
+import menuLogo from '../../assets/images/menu-logo.png';
+import result from '../../assets/images/result.png';
+import dot from '../../assets/images/dot.png';
+import prizeBtn from '../../assets/images/prize-btn.png';
+import againBtn from '../../assets/images/again-btn.png';
 
 export default class Boot extends Phaser.Scene {
   private fontsReady: boolean;
@@ -61,6 +72,23 @@ export default class Boot extends Phaser.Scene {
     this.load.image('platform', platform);
     this.load.image('platform-tile', platformTile);
     this.load.image('start-btn', startBtn);
+    this.load.image('progress-bg', progressBg);
+    this.load.image('pause', pause);
+    this.load.image('progress', progress);
+    this.load.image('point', point);
+    this.load.image('close', close);
+    this.load.image('rules-btn', rulesBtn);
+    this.load.image('menu-logo', menuLogo);
+    this.load.image('result', result);
+    this.load.image('dot', dot);
+    this.load.image('again-btn', againBtn);
+    this.load.image('prize-btn', prizeBtn);
+
+    this.load.plugin(
+      'rexroundrectangleplugin',
+      'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexroundrectangleplugin.min.js',
+      true
+    );
 
     this.load.spritesheet('player', player, {
       frameWidth: 150,

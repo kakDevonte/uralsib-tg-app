@@ -2,6 +2,10 @@ import Coin from '../components/Coin';
 import Platform from '../components/Platform';
 import Player from '../components/Player';
 import { coin } from '../types/enums';
+import ProgressBar from '../components/ProgressBar';
+import Button from '../components/Button';
+import Rules from '../screens/Rules';
+import User from '../data/User';
 
 const MAX_JUMP = 120; // абстрактное число максимального прыжка
 const MIN_INDENT = 70; // минимально расстояние для следующей платформы
@@ -12,40 +16,98 @@ const DISTANCE = 400; // расстояние между платформами
 export default class Game extends Phaser.Scene {
   private bg: Phaser.GameObjects.TileSprite;
   private player: Player;
+  private progressBar: ProgressBar;
   public currentVelocity: number = 300;
   private readonly minVelocity: number = 320;
   private readonly maxVelocity: number = 1000;
   public platforms: Phaser.Physics.Arcade.Group;
   public coins: Phaser.Physics.Arcade.Group;
   public collider: Phaser.Physics.Arcade.Collider;
-  private platformCreateEvent: Phaser.Time.TimerEvent;
+  private platformEvent: Phaser.Time.TimerEvent;
+  private scoreEvent: Phaser.Time.TimerEvent;
+  private pauseBtn: Button;
+  private isPressPause: Boolean;
+  private isPause: Boolean;
+  public screen: any;
 
   constructor() {
     super('Game');
+    this.isPressPause = false;
+    this.isPause = false;
   }
 
   public create(): void {
     this.createBackground();
     this.player = new Player(this);
+    this.progressBar = new ProgressBar(this);
     this.coins = this.physics.add.group();
     this.platforms = this.physics.add.group();
     this.collider = this.physics.add.collider(this.player, this.platforms);
+    this.pauseBtn = new Button(
+      this,
+      (this.cameras.main.width / 100) * 95,
+      this.progressBar.bg.y,
+      'pause',
+      () => {
+        this.setPause();
+      }
+    ).setOrigin(0.5, 0.5);
 
     this.createPlatform(true);
     this.tapOnTheScreen();
     this.createPlatformEvent();
+    this.createScoreEvent();
     this.setCollisions();
+
+    this.events.on('resume', (scene: this, data) => {
+      this.isPause = false;
+      this.platformEvent.paused = false;
+      this.scoreEvent.paused = false;
+      this.player.setVisible(true);
+    });
   }
 
   public update(): void {
+    if (this.isPause) return;
+
+    if (User.getScore() >= 1000) {
+      this.progressBar.resetProgress();
+      this.scene.stop();
+      this.scene.start('Result');
+    }
+    this.progressBar.updateProgress(User.getScore());
     this.onOutOfBounds();
     let velocity = this.minVelocity;
     this.currentVelocity = Math.min(velocity, this.maxVelocity);
-    this.bg.tilePositionX += (this.currentVelocity / this.minVelocity) * 2.2;
+    this.bg.tilePositionX += (this.currentVelocity / this.minVelocity) * 4.2;
+  }
+
+  private setPause(): void {
+    this.scene.pause();
+    this.scene.launch('Modal');
+    this.isPause = true;
+    this.platformEvent.paused = true;
+    this.scoreEvent.paused = true;
+    this.player.setVisible(false);
+  }
+
+  private setResume(): void {
+    // this.scene.resume();
+    this.isPause = false;
+    this.platformEvent.paused = false;
+    this.scoreEvent.paused = false;
+    this.player.setVisible(true);
   }
 
   private tapOnTheScreen(): void {
+    this.pauseBtn.on('pointerdown', () => {
+      this.isPressPause = true;
+    });
     this.input.on('pointerdown', (): void => {
+      console.log('ásdsadasdsad');
+      if (this.isPressPause) return;
+
+      this.isPressPause = false;
       if (this.player.anims.getName() === 'jump') return;
       this.player.jump();
     });
@@ -55,12 +117,12 @@ export default class Game extends Phaser.Scene {
     this.bg = this.add
       .tileSprite(
         0,
-        this.cameras.main.displayHeight,
+        this.cameras.main.centerY,
         this.cameras.main.displayWidth,
         this.cameras.main.displayHeight,
         'bg'
       )
-      .setOrigin(0, 1);
+      .setOrigin(0, 0.5);
   }
 
   private getPlatformPosition(
@@ -109,10 +171,21 @@ export default class Game extends Phaser.Scene {
   }
 
   private createPlatformEvent(): void {
-    this.platformCreateEvent = this.time.addEvent({
+    this.platformEvent = this.time.addEvent({
       delay: 10,
       callback: (): void => {
         this.createPlatform();
+        this.isPressPause = false;
+      },
+      loop: true,
+    });
+  }
+
+  private createScoreEvent(): void {
+    this.scoreEvent = this.time.addEvent({
+      delay: 1000,
+      callback: (): void => {
+        User.plusScore(1);
       },
       loop: true,
     });
@@ -120,6 +193,7 @@ export default class Game extends Phaser.Scene {
 
   public setCollisions(): void {
     this.physics.add.overlap(this.platforms, this.player, () => {
+      this.progressBar.resetProgress();
       this.player.die();
       this.scene.stop();
       this.scene.start('Result');
@@ -131,6 +205,7 @@ export default class Game extends Phaser.Scene {
       (obj1: Player, obj2: Coin) => {
         if (!obj2.isTaked) {
           obj2.setIsTaked();
+          obj2.coin === coin.BLUE ? User.plusScore(50) : User.plusScore(20);
         }
       }
     );
@@ -146,8 +221,8 @@ export default class Game extends Phaser.Scene {
         ? Phaser.Math.Between(1, 4)
         : Phaser.Math.Between(1, 5);
     const x = Phaser.Math.Between(
-      platform.x - platform.size / 2 + 15,
-      platform.x + platform.size / 2 - 15
+      platform.x - platform.size / 2 + 25,
+      platform.x + platform.size / 2 - 25
     );
     const icon = new Coin(this, x, platform.y - 80, texture + num, type);
     this.coins.add(icon);
@@ -155,6 +230,8 @@ export default class Game extends Phaser.Scene {
 
   private onOutOfBounds = () => {
     if (this.player.y >= this.cameras.main.height) {
+      this.progressBar.resetProgress();
+      this.progressBar.updateProgress(User.getScore());
       this.scene.stop();
       this.scene.start('Result');
     }

@@ -1,12 +1,9 @@
 class User {
-
   private _id: string = '0';
   private _name: string = 'Неизвестный игрок';
   private _username: string = 'no_username';
   private _score: number = 0;
   private _record: number = 0;
-  private _health: number = 0;
-  private _timer: number = 0;
   private _isWin: boolean = false;
 
   public setIsWin(value: boolean) {
@@ -58,34 +55,6 @@ class User {
 
   public getRecord(): number {
     return this._record;
-  }
-
-  public resetHealth(): number {
-    this._health = 3;
-    return this._health;
-  }
-
-  public minusHealht(): number {
-    if (this._health > 0) this._health--;
-    return this._health;
-  }
-
-  public getHealth(): number {
-    return this._health;
-  }
-  
-  public getTimer(): number {
-    return this._timer;
-  }
-
-  public resetTimer(): number {
-    this._timer = 0;
-    return this._timer;
-  }
-
-  public plusTimer(): number {
-    this._timer++;
-    return this._timer;
   }
 }
 

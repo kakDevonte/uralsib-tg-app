@@ -1,13 +1,13 @@
 {
-  "name": "mts-tg-app",
+  "name": "uralsib-tg-app",
   "version": "1.0.0",
-  "description": "mts tg web app",
+  "description": "uralsib web app",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack/build.js && node webpack/eruda.js",
     "start": "webpack-dev-server --config webpack/config.js --open"
   },
-  "author": "Aleksandr Skorobogatyi",
+  "author": "Aleksandr Khatyushin",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.18.10",

@@ -5,6 +5,7 @@ import Settings from './data/Settings';
 import Game from './scenes/Game';
 import Result from './scenes/Result';
 import Start from './scenes/Start';
+import Modal from './scenes/Modal';
 
 const gcd = (num1: number, num2: number): number => {
   while (num1 && num2) num1 > num2 ? (num1 %= num2) : (num2 %= num1);
@@ -56,7 +57,7 @@ window.onload = (): void => {
         // arcade: { debug: true },
       },
       render: { transparent: true },
-      scene: [Boot, Game, Result, Start],
+      scene: [Boot, Game, Result, Start, Modal],
     };
     new Phaser.Game(config);
   }, 100);
