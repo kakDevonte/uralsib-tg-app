@@ -28,6 +28,8 @@ import result from '../../assets/images/result.png';
 import dot from '../../assets/images/dot.png';
 import prizeBtn from '../../assets/images/prize-btn.png';
 import againBtn from '../../assets/images/again-btn.png';
+import User from '../data/User';
+import { uralsibAPI } from '../libs/Api';
 
 export default class Boot extends Phaser.Scene {
   private fontsReady: boolean;
@@ -38,7 +40,14 @@ export default class Boot extends Phaser.Scene {
 
   public init(): void {
     Webfont.load({
-      custom: { families: ['stolzl_medium', 'stolzl_light'] },
+      custom: {
+        families: [
+          'stolzl_medium',
+          'stolzl_light',
+          'stolzl_light_ttf',
+          'stolzl_book',
+        ],
+      },
       active: () => {
         this.fontsReady = true;
       },
@@ -47,6 +56,7 @@ export default class Boot extends Phaser.Scene {
 
   public preload(): void {
     this.preloadAssets();
+    this.checkUser();
   }
 
   public create(): void {
@@ -94,5 +104,51 @@ export default class Boot extends Phaser.Scene {
       frameWidth: 150,
       frameHeight: 199,
     });
+  }
+
+  private async checkUser(): Promise<void> {
+    const telegram = window['Telegram']['WebApp'];
+    telegram.ready();
+    telegram.expand();
+
+    try {
+      User.setID(telegram.initDataUnsafe.user.id);
+    } catch (e) {
+      User.setID('0');
+    }
+
+    try {
+      User.setName(telegram.initDataUnsafe.user.first_name);
+    } catch (e) {
+      User.setName('Неизвестный игрок');
+    }
+
+    try {
+      User.setUsername(telegram.initDataUnsafe.user.username);
+    } catch (e) {
+      User.setUsername('no_username');
+    }
+
+    const { data } = await uralsibAPI.getUser(User.getID());
+
+    if (data) {
+      User.setID(data.telegram_id);
+      User.setUsername(data.telegram_username);
+      User.setRecord(data.score);
+
+      await uralsibAPI.updateUser({
+        telegram_id: User.getID(),
+        telegram_username: User.getUsername(),
+        score: User.getRecord(),
+        isLaunched: true,
+      });
+    } else {
+      await uralsibAPI.createUser({
+        telegram_id: User.getID(),
+        telegram_username: User.getUsername(),
+        score: User.getScore(),
+        isLaunched: true,
+      });
+    }
   }
 }

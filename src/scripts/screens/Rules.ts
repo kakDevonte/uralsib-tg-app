@@ -81,13 +81,12 @@ class Rules {
         this.rules.y + this.rules.height * 1.5,
         Settings.lang.rules_text,
         {
-          font: '24px stolzl_light',
+          font: '26px stolzl_book',
           color: '#0c0000',
           align: 'left',
         }
       )
-      .setOrigin(0.5, 0)
-      .setFontStyle('bold');
+      .setOrigin(0.5, 0);
 
     this.balls50 = this.scene.add
       .text(
@@ -95,8 +94,8 @@ class Rules {
         this.rules_text.y + this.rules_text.height,
         Settings.lang.balls50,
         {
-          font: '24px stolzl_medium',
-          color: '#0c0000',
+          font: '26px stolzl_medium',
+          color: '#000000',
           align: 'left',
         }
       )
@@ -141,7 +140,7 @@ class Rules {
         this.blue4.y + this.blue4.height * 0.8,
         Settings.lang.balls20,
         {
-          font: '24px stolzl_medium',
+          font: '26px stolzl_medium',
           color: '#0c0000',
           align: 'left',
         }
@@ -195,13 +194,12 @@ class Rules {
         this.red5.y + this.red5.height * 0.8,
         Settings.lang.rules_text2,
         {
-          font: '24px stolzl_light',
+          font: '26px stolzl_book',
           color: '#0c0000',
           align: 'left',
         }
       )
-      .setOrigin(0, 0)
-      .setFontStyle('bold');
+      .setOrigin(0, 0);
 
     this.luck = this.scene.add
       .text(
@@ -209,13 +207,12 @@ class Rules {
         this.rules_text2.y + this.rules_text2.height * 1.2,
         Settings.lang.luck,
         {
-          font: '24px stolzl_light',
+          font: '28px stolzl_book',
           color: '#0c0000',
           align: 'left',
         }
       )
-      .setOrigin(0, 0)
-      .setFontStyle('bold');
+      .setOrigin(0, 0);
 
     this.texts.push(this.rules_text);
     this.texts.push(this.rules_text2);

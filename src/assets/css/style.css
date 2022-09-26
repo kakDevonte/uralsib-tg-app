@@ -6,6 +6,14 @@
   font-family: stolzl_light;
   src: url('../fonts/stolzl_light.otf');
 }
+@font-face {
+  font-family: stolzl_light_ttf;
+  src: url('../fonts/stolzl_light.ttf');
+}
+@font-face {
+  font-family: stolzl_book;
+  src: url('../fonts/stolzl_book.ttf');
+}
 * {
   font-family: Bip;
   margin: 0;

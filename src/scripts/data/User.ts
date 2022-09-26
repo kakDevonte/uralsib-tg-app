@@ -33,6 +33,10 @@ class User {
     return this._username;
   }
 
+  public getUsername(): string {
+    return this._username;
+  }
+
   public getScore(): number {
     return this._score;
   }

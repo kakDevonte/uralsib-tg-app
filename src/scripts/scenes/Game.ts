@@ -39,6 +39,8 @@ export default class Game extends Phaser.Scene {
   public create(): void {
     this.createBackground();
     this.player = new Player(this);
+    // // this.cameras.main.startFollow(this.player);
+    // this.cameras.main.setLerp(0, 1);
     this.progressBar = new ProgressBar(this);
     this.coins = this.physics.add.group();
     this.platforms = this.physics.add.group();
@@ -80,6 +82,7 @@ export default class Game extends Phaser.Scene {
     let velocity = this.minVelocity;
     this.currentVelocity = Math.min(velocity, this.maxVelocity);
     this.bg.tilePositionX += (this.currentVelocity / this.minVelocity) * 4.2;
+    //this.bg.setY(this.player.y);
   }
 
   private setPause(): void {
@@ -114,15 +117,14 @@ export default class Game extends Phaser.Scene {
   }
 
   private createBackground(): void {
-    this.bg = this.add
-      .tileSprite(
-        0,
-        this.cameras.main.centerY,
-        this.cameras.main.displayWidth,
-        this.cameras.main.displayHeight,
-        'bg'
-      )
-      .setOrigin(0, 0.5);
+    this.bg = this.add.tileSprite(
+      0,
+      this.cameras.main.centerY,
+      3926,
+      1700,
+      'bg'
+    );
+    // .setOrigin(0, 0.5);
   }
 
   private getPlatformPosition(

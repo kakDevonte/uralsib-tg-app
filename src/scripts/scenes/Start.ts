@@ -42,7 +42,7 @@ export default class Start extends Phaser.Scene {
         this.welcome.getBounds().bottom + 25,
         Settings.lang.runToFinish,
         {
-          font: '26px stolzl_light',
+          font: '26px stolzl_book',
           color: '#ffffff',
           align: 'center',
         }
@@ -81,7 +81,7 @@ export default class Start extends Phaser.Scene {
         this.hundred.getBounds().bottom,
         Settings.lang.bank,
         {
-          font: '26px stolzl_light',
+          font: '26px stolzl_book',
           color: '#ffffff',
           align: 'center',
         }
@@ -94,7 +94,7 @@ export default class Start extends Phaser.Scene {
         this.bank.getBounds().bottom + 25,
         Settings.lang.goodLuck,
         {
-          font: '26px stolzl_light',
+          font: '26px stolzl_book',
           color: '#ffffff',
           align: 'center',
         }

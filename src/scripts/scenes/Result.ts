@@ -1,6 +1,7 @@
 import Settings from '../data/Settings';
 import Button from '../components/Button';
 import User from '../data/User';
+import { uralsibAPI } from '../libs/Api';
 
 export default class Result extends Phaser.Scene {
   private bg: Phaser.GameObjects.Sprite;
@@ -21,7 +22,6 @@ export default class Result extends Phaser.Scene {
   private dot3: Phaser.GameObjects.Sprite;
 
   private result: Phaser.GameObjects.Text;
-  private record: Phaser.GameObjects.Text;
 
   private againBtn: Button;
   private prizeBtn: Button;
@@ -30,12 +30,22 @@ export default class Result extends Phaser.Scene {
     super('Result');
   }
 
+  public preload(): void {
+    (async () => {
+      await this.endGame();
+    })();
+    (async () => {
+      await this.updateUser();
+    })();
+  }
+
   public create(): void {
     if (User.getScore() > 1000) {
       User.resetScore();
       User.plusScore(1000);
       User.setRecord(User.getScore());
     }
+
     const { centerX, centerY, width, height } = this.cameras.main;
     const fontSize = Settings.isMobile() ? 24 : 16;
     const bg = this.add
@@ -79,7 +89,7 @@ export default class Result extends Phaser.Scene {
         this.resultLogo.getBounds().bottom,
         Settings.lang.resultIsFire,
         {
-          font: '10px stolzl_light',
+          font: '10px stolzl_book',
           color: '#ffffff',
           align: 'center',
         }
@@ -158,7 +168,7 @@ export default class Result extends Phaser.Scene {
         this.cashBack.getBounds().bottom + height * 0.04,
         Settings.lang.see,
         {
-          font: '20px stolzl_light',
+          font: '20px stolzl_book',
           color: '#ffffff',
           align: 'center',
         }
@@ -202,7 +212,7 @@ export default class Result extends Phaser.Scene {
         this.oneBid.getBounds().centerY,
         Settings.lang.forTheBonus,
         {
-          font: '20px stolzl_light',
+          font: '20px stolzl_book',
           color: '#ffffff',
           align: 'center',
         }
@@ -216,7 +226,7 @@ export default class Result extends Phaser.Scene {
         this.forTheBonus.getBounds().bottom,
         Settings.lang.rubls,
         {
-          font: '20px stolzl_light',
+          font: '20px stolzl_book',
           color: '#ffffff',
           align: 'center',
         }
@@ -242,6 +252,7 @@ export default class Result extends Phaser.Scene {
       this.againBtn.getBounds().top - this.againBtn.height / 1.5,
       'prize-btn',
       (): void => {
+        uralsibAPI.pressButton();
         const link = 'https://www.youtube.com/c/Parimatchesports';
         const a = document.createElement('a');
         a.setAttribute('target', '_blank');
@@ -251,6 +262,14 @@ export default class Result extends Phaser.Scene {
         document.body.removeChild(a);
       }
     ).setScale(Settings.isMobile() ? 1 : 0.8);
+
+    // this.NADO = this.add
+    //   .text(centerX, centerY, String(User.getRecord()), {
+    //     font: '58px stolzl_medium',
+    //     color: '#ffffff',
+    //     align: 'center',
+    //   })
+    //   .setOrigin(0.5, 0.5)
   }
 
   private getScoreWord(score: number): string {
@@ -274,5 +293,18 @@ export default class Result extends Phaser.Scene {
         word = 'баллов';
     }
     return word;
+  }
+
+  private async endGame() {
+    await uralsibAPI.endGame();
+  }
+
+  private async updateUser() {
+    await uralsibAPI.updateUser({
+      telegram_id: User.getID(),
+      telegram_username: User.getUsername(),
+      score: User.getRecord(),
+      isLaunched: true,
+    });
   }
 }
